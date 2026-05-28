@@ -1,70 +1,18 @@
 const express = require("express");
 const cors = require("cors");
+
+const tasksRoutes = require("./routes/tasksRoutes");
+const loggerMiddleware = require("./middlewares/loggerMiddleware");
 const app = express();
 
 app.use(cors());
 
+app.use(loggerMiddleware);
+
 app.use(express.json());
 
-let tasks = [];
-
-app.get("/", (req, res) => {
-  res.send("API funcionando");
-});
-
-app.get("/tasks", (req, res) => {
-  res.json(tasks);
-});
-
-app.post("/tasks", (req, res) => {
-
-  const newTask = {
-    id: Date.now(),
-
-    title: req.body.title,
-
-    description: req.body.description,
-
-    done: false
-  };
-
-  tasks.push(newTask);
-
-  res.status(201).json(newTask);
-});
-
-app.delete("/tasks/:id", (req, res) => {
-
-  const taskId = Number(req.params.id);
-
-  tasks = tasks.filter(
-    task => task.id !== taskId
-  );
-
-  res.json({
-    message: "Tarefa removida"
-  });
-});
-
-app.put("/tasks/:id", (req, res) => {
-
-  const taskId = Number(req.params.id);
-
-  const task = tasks.find(
-    task => task.id === taskId
-  );
-
-  if (!task) {
-    return res.status(404).json({
-      message: "Tarefa não encontrada"
-    });
-  }
-
-  task.done = req.body.done;
-
-  res.json(task);
-});
+app.use(tasksRoutes);
 
 app.listen(3000, () => {
-  console.log("Servidor rodando na porta 3000");
+  console.log("Servidor rodando");
 });
