@@ -1,3 +1,5 @@
+
+const usersRoutes = require("./routes/usersRoutes");
 const express = require("express");
 const cors = require("cors");
 
@@ -10,7 +12,7 @@ app.use(cors());
 app.use(loggerMiddleware);
 
 app.use(express.json());
-
+app.use(usersRoutes);
 app.use(tasksRoutes);
 
 app.listen(3000, () => {
